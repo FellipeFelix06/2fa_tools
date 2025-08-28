@@ -5,6 +5,7 @@ import sqlite3
 import base64
 import time
 import pyfiglet
+import os
 
 PATH_DB = Path(__file__).parent / '2fa.sqlite'
 
@@ -29,6 +30,15 @@ def decrypt(texto_cifrado_hex, chave_aes_bytes):
 def consulta(opcao):
     conn = sqlite3.connect(PATH_DB)
     cursor = conn.cursor()
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS "2fa" (
+    key_aes TEXT, \
+    OTP TEXT, \
+    service TEXT
+    )
+    """)
+    conn.commit()
+
     if opcao == '1':
         total = 0
         print("")
