@@ -1,5 +1,3 @@
-Ferramenta de gerenciamento de códigos OTP
- 
  # 2FA Tools
 
 ![alt text](assets/imgs/image.png)
@@ -21,4 +19,5 @@ Funcionalidades:
 
 Objetivo:
 Facilitar o gerenciamento de autenticação de Dois Fatores.
+
 
