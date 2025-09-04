@@ -1,8 +1,10 @@
-﻿# 2FA Tools
+Ferramenta de gerenciamento de códigos OTP
+ 
+ # 2FA Tools
 
 ![alt text](assets/imgs/image.png)
 
-## Ferramenta de Gerenciamento OTP.
+## Ferramenta de Gerenciamento OTP code.
 
 ## Descrição
 Ferramenta em Python para gerenciamento de códigos OTP, permitindo gerar, salvar e organizar seus códigos 2FA de forma prática e segura.
@@ -19,3 +21,4 @@ Funcionalidades:
 
 Objetivo:
 Facilitar o gerenciamento de autenticação de Dois Fatores.
+
