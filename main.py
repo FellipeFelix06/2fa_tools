@@ -2,7 +2,6 @@ import pyotp
 from Crypto.Cipher import AES
 from pathlib import Path
 import sqlite3
-import base64
 import time
 import pyfiglet
 import os
@@ -92,6 +91,7 @@ def consulta(opcao, chave_aes):
     cursor = conn.cursor()
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS "2fa" (
+    id INTEGER PRIMARY KEY,
     OTP TEXT, \
     service TEXT
     )
@@ -100,29 +100,35 @@ def consulta(opcao, chave_aes):
     conn.commit()
 
     if opcao == '1':
-        cursor.execute("""SELECT OTP, service FROM "2fa"
+        cursor.execute("""SELECT id, OTP, service FROM "2fa"
         """)
         all = cursor.fetchall()
-        total = 0
+
         if all == []:
             print("Nenhum Serviço.")
             return
         else:
-            for otp, service in all:
-                total += 1
-                print(f'{total}.', service)
+            for id, otp, service in all:
+                print(f'{id}.', service)
 
-            buscar = input("Digite um serviço: ")
+            buscar = input("Digite um ID: ").strip()
+            try:
+                buscar_id = int(buscar)
+            except ValueError:
+                print("ID inválido.")
+                return cursor.close(), conn.close()
+            
+            escolhido = next((r for r in all if r[0] == buscar_id), None)
+            if not escolhido:
+                print("Serviço inválido")
+                return cursor.close(), conn.close()
 
-            for otp_encrypted, service in all:
-                if buscar == service:
-                    otp = decrypt(otp_encrypted, chave_aes)
-                    secret_key = otp
-                    totp = pyotp.TOTP(secret_key)
-                    codigo_atual = totp.now()
-                    print("Código OTP:", codigo_atual)
-                else:
-                    print('Serivço inválido')
+            _, otp_encrypted, service = escolhido
+            secret_key = decrypt(otp_encrypted, chave_aes).replace(" ", "")
+            totp = pyotp.TOTP(secret_key)
+            codigo_atual = totp.now()
+            print("Código OTP:", codigo_atual)
+            time.sleep(10)
 
     elif opcao == '2':
         otp_entrada = input("Digite o código OTP: ")
